@@ -97,7 +97,6 @@ const ToDo = () => {
       </Card>
 
       {pagination().map(item => (
-        <Card interactive={true} elevation={Elevation.ONE}>
           <div key={item.id}>
             <p>{item.text}</p>
             <p><small>Assigned to: {item.assignee}</small></p>
@@ -105,9 +104,8 @@ const ToDo = () => {
             <Button onClick={() => toggleComplete(item.id)}>Complete: {item.complete.toString()}</Button>
             <hr />
           </div>
-        </Card>
-        
-      ))}
+        ))
+      }
       <Button onClick={previous}>Previous</Button>
       <Button onClick={next}>Next</Button>
     </>
