@@ -128,6 +128,7 @@ const ToDo = () => {
             <p><small>Assigned to: {item.assignee}</small></p>
             <p><small>Difficulty: {item.difficulty}</small></p>
             <Button onClick={() => toggleComplete(item.id)}>Complete: {item.complete.toString()}</Button>
+            <Button intent="danger" onClick={() => deleteItem(item.id)}>Delete</Button>
             </Card>
             <hr />
           </div>
