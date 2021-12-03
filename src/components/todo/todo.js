@@ -4,7 +4,7 @@ import useForm from '../../hooks/form.js';
 import { v4 as uuid } from 'uuid';
 import { SettingsContext } from '../../context/settings.js'
 
-import { Button, Card, Elevation } from "@blueprintjs/core";
+import { Button, Card, Elevation, Switch} from "@blueprintjs/core";
 
 const ToDo = () => {
 
@@ -48,10 +48,19 @@ const ToDo = () => {
   }, [list]);
 
 
+  function handleHide() {
+    settings.setHide(!settings.hide)
+  }
+
   function pagination() {
     let pageList = list.slice(firstIndexPerPage, lastIndexPerPage);
     return pageList;
+
+    // let firstIndexPerPage = lastIndexPerPage - settings.displayNumberOfItems
+    // return list.slice(firstIndexPerPage, lastIndexPerPage)
   }
+
+  
 
   function next() {
     setFirstIndexPerPage(firstIndexPerPage + settings.displayNumberOfItems);
@@ -94,17 +103,23 @@ const ToDo = () => {
             <button type="submit">Add Item</button>
           </label>
         </form>
+
+        <Switch onChange={handleHide}>
+          Hide Completed Items
+        </Switch>
+
       </Card>
 
-      {pagination().map(item => (
-          <div key={item.id}>
+      {pagination().map((item, idx) => {
+        if(settings.hide === false || item.complete === false) {
+         return <div key={idx}>
             <p>{item.text}</p>
             <p><small>Assigned to: {item.assignee}</small></p>
             <p><small>Difficulty: {item.difficulty}</small></p>
             <Button onClick={() => toggleComplete(item.id)}>Complete: {item.complete.toString()}</Button>
             <hr />
           </div>
-        ))
+        }})
       }
       <Button onClick={previous}>Previous</Button>
       <Button onClick={next}>Next</Button>
