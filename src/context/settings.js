@@ -6,7 +6,7 @@ function SettingsProvider(props) {
 
   const [hide, setHide] = useState(false);
   const [displayNumberOfItems, setDisplayNumberOfItems] = useState(5);
-  const [sort, setSort] = useState('')
+  const [sort, setSort] = useState('difficulty')
 
   return (
     <SettingsContext.Provider value={{hide, displayNumberOfItems, sort, setHide}}>
