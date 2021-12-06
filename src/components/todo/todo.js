@@ -4,7 +4,7 @@ import useForm from '../../hooks/form.js';
 import { v4 as uuid } from 'uuid';
 import { SettingsContext } from '../../context/settings.js'
 
-import { Button, Card, Elevation } from "@blueprintjs/core";
+import { Button, Card, Elevation, Switch} from "@blueprintjs/core";
 
 const ToDo = () => {
 
@@ -48,17 +48,29 @@ const ToDo = () => {
   }, [list]);
 
 
+  function handleHide(e) {
+    e.preventDefault();
+    settings.setHide(!settings.hide)
+  }
+
   function pagination() {
     let pageList = list.slice(firstIndexPerPage, lastIndexPerPage);
     return pageList;
   }
 
-  function next() {
+  function changePagination(e) {
+    e.preventDefault();
+    settings.setDisplayNumberOfItems(e.target.value)
+  }
+
+  function next(e) {
+    e.preventDefault();
     setFirstIndexPerPage(firstIndexPerPage + settings.displayNumberOfItems);
     setLastIndexPerPage(lastIndexPerPage + settings.displayNumberOfItems);
   }
 
-  function previous() {
+  function previous(e) {
+    e.preventDefault();
     setFirstIndexPerPage(firstIndexPerPage - settings.displayNumberOfItems);
     setLastIndexPerPage(lastIndexPerPage - settings.displayNumberOfItems);
   }
@@ -93,18 +105,34 @@ const ToDo = () => {
           <label>
             <button type="submit">Add Item</button>
           </label>
+
+          <label>
+            <span>Items Per Page</span>
+            <input onChange={changePagination} defaultValue={5} min={1} max={10} />
+          </label>
+
+          <Switch onChange={handleHide}>
+            Hide Completed Items
+          </Switch>
         </form>
+
+
+
       </Card>
 
-      {pagination().map(item => (
-          <div key={item.id}>
+      {pagination().map((item, idx) => {
+        if(settings.hide === false || item.complete === false) {
+         return <div key={idx}>
+           <Card>
             <p>{item.text}</p>
             <p><small>Assigned to: {item.assignee}</small></p>
             <p><small>Difficulty: {item.difficulty}</small></p>
             <Button onClick={() => toggleComplete(item.id)}>Complete: {item.complete.toString()}</Button>
+            <Button intent="danger" onClick={() => deleteItem(item.id)}>Delete</Button>
+            </Card>
             <hr />
           </div>
-        ))
+        }})
       }
       <Button onClick={previous}>Previous</Button>
       <Button onClick={next}>Next</Button>
