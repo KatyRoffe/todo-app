@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import  { Button, InputGroup } from '@blueprintjs/core';
 
-import { AuthContext } from '../../context/Auth';
+import { AuthContext } from '../../context/auth';
 
 const Login = () => {
 

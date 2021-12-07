@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import jwt from 'jsonwebtoken';
+import cookie from 'react-cookies'
 
 export const AuthContext = React.createContext();
 
@@ -18,6 +19,7 @@ const AuthProvider = ({ children }) => {
   });
 
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [token, setToken] = useState(null);
 
   const isUserAuthorized = (capability) => {
     return user?.capabilities?.includes(capability);
@@ -46,9 +48,35 @@ const AuthProvider = ({ children }) => {
     }
   }
 
+  const setLogInState = (boolean, token, user) => {
+    cookie.save('auth', token);
+    setIsUserLoggedIn(boolean);
+    setToken(token);
+    setUser(user);
+  }
+
+  const validateToken = (token) => {
+    try{
+      let user = jwt.verify(token, SECRET);
+      setLogInState(true, token, user);
+    } catch (e) {
+      setLogInState(false, null, {});
+      console.log('Error validating token:', e);
+    }
+  }
+
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    const cookieToken = cookie.load('auth');
+    const token = query.get('token') || cookieToken || null;
+    validateToken(token);
+  }, []);
+
+  
+
   return (
 
-    <AuthContext.Provider value={{user, isUserLoggedIn, login, logout, isUserAuthorized}}>
+    <AuthContext.Provider value={{user, isUserLoggedIn, login, logout, isUserAuthorized, setLogInState}}>
       {children}
     </AuthContext.Provider>
   )
