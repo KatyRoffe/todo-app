@@ -8,17 +8,19 @@ import Login from './components/auth/login.js';
 import Auth from './components/auth/auth.js'
 
 
-export default class App extends React.Component {
-  render() {
-    return (
+function App() {
+
+  return (
     <>
       <Login />
-      <Auth capability="read">
+      <Auth capability="delete">
+        <p>Welcome, Admin!</p>
         <SettingsProvider>
           <ToDo />
         </SettingsProvider>
       </Auth>
     </>
-    );
-  }
+  );
 }
+
+export default App;
