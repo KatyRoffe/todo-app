@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { AuthContext } from '../../context/Auth.js';
+import { AuthContext } from '../../context/auth.js';
 
 
 const IsUserAuthorized = ({ children, capability }) => {
